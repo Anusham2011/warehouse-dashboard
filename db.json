@@ -1,0 +1,34 @@
+{
+  "items": [
+    {
+      "id": "1",
+      "name": "Robot Arm A1",
+      "quantity": 5
+    },
+    {
+      "id": "2",
+      "name": "Sensor Unit B2",
+      "quantity": 12
+    },
+    {
+      "id": "3",
+      "name": "Battery Pack C3",
+      "quantity": 8
+    },
+    {
+      "id": "db8a",
+      "name": "Test Item",
+      "quantity": 99
+    },
+    {
+      "id": "4091",
+      "name": "Test Item",
+      "quantity": 99
+    },
+    {
+      "id": "fa4b",
+      "name": "Test Item",
+      "quantity": 99
+    }
+  ]
+}
