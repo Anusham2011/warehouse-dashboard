@@ -8,6 +8,8 @@ import {
   Paper,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+
 
 type Item = {
   id: number;
@@ -18,9 +20,11 @@ type Item = {
 type ItemListProps = {
   items: Item[];
   onDelete: (id: number) => void;
+  onEdit: (item: Item) => void;
 };
 
-const ItemList: React.FC<ItemListProps> = ({ items, onDelete }) => {
+const ItemList: React.FC<ItemListProps> = ({ items, onDelete, onEdit }) => {
+
   return (
     <Paper elevation={3} sx={{ padding: 2 }}>
       <Typography variant="h6" gutterBottom>
@@ -31,10 +35,15 @@ const ItemList: React.FC<ItemListProps> = ({ items, onDelete }) => {
           <ListItem
             key={item.id}
             secondaryAction={
-              <IconButton edge="end" onClick={() => onDelete(item.id)}>
-                <DeleteIcon />
-              </IconButton>
-            }
+              <>
+    <IconButton edge="end" onClick={() => onEdit(item)}>
+  <EditIcon />
+</IconButton>
+    <IconButton edge="end" onClick={() => onDelete(item.id)}>
+      <DeleteIcon />
+    </IconButton>
+  </>
+}
           >
             <ListItemText
               primary={item.name}

@@ -3,6 +3,8 @@ import './App.css';
 import ItemList from './components/ItemList';
 import AddItemForm from './components/AddItemForm';
 import { Container, TextField } from '@mui/material';
+import EditItemForm from './components/EditItemForm';
+
 
 
 
@@ -20,6 +22,12 @@ const API_URL = 'http://localhost:5000/items';
 function App() {
   const [items, setItems] = useState<Item[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
+  const handleEditClick = (item: Item) => {
+    setEditingItem(item);
+  };
+  
+
 
 
   // ✅ 1. Load items from API
@@ -60,6 +68,24 @@ function App() {
       })
       .catch((err) => console.error('Failed to delete item:', err));
   };
+  // ✅ 4. Update item in API
+const handleUpdateItem = (updatedItem: { id: number; name: string; quantity: number }) => {
+  fetch(`${API_URL}/${updatedItem.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updatedItem),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      setItems((prev) =>
+        prev.map((item) => (item.id === updatedItem.id ? data : item))
+      );
+      setEditingItem(null); // ✅ hide form after update
+      console.log('[PUT] Updated:', data);
+    })
+    .catch((err) => console.error('Failed to update item:', err));
+};
+
   const filteredItems = searchTerm
   ? items.filter((item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -74,8 +100,17 @@ function App() {
         </div>
     
         <div style={{ marginBottom: '24px' }}>
-          <AddItemForm onAddItem={handleAddItem} />
-        </div>
+  {editingItem ? (
+    <EditItemForm
+      item={editingItem}
+      onUpdate={handleUpdateItem}
+      onCancel={() => setEditingItem(null)}
+    />
+  ) : (
+    <AddItemForm onAddItem={handleAddItem} />
+  )}
+</div>
+
     
         <div style={{ marginBottom: '24px' }}>
           <TextField
@@ -88,7 +123,7 @@ function App() {
         </div>
     
         <div>
-          <ItemList items={filteredItems} onDelete={handleDeleteItem} />
+          <ItemList items={filteredItems} onDelete={handleDeleteItem}  onEdit={handleEditClick} />
         </div>
       </Container>
     );
