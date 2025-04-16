@@ -7,22 +7,29 @@ type AddItemFormProps = {
 
 const AddItemForm: React.FC<AddItemFormProps> = ({ onAddItem }) => {
   const [name, setName] = useState('');
-  const [quantity, setQuantity] = useState<number>(0);
+  const [quantity, setQuantity] = useState<string>('0');// ✔️ empty string means the field starts empty
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || quantity <= 0) return;
+  
+    if (!name.trim()) {
+      alert('Please enter an item name.');
+      return;
+    }
+  
+    if (quantity === '' || isNaN(Number(quantity)) || Number(quantity) < 0) {
 
-    const newItem = {
-      name,
-      quantity,
-    };
-
-    onAddItem(newItem); // Let App.tsx handle the API call
+      alert('Please enter a valid quantity greater than 0.');
+      return;
+    }
+  
+    onAddItem({ name, quantity: Number(quantity) });
 
     setName('');
-    setQuantity(0);
+    setQuantity('');
   };
+  
 
   return (
     <Box
@@ -39,13 +46,26 @@ const AddItemForm: React.FC<AddItemFormProps> = ({ onAddItem }) => {
         required
       />
       <TextField
-        label="Quantity"
-        type="number"
-        variant="outlined"
-        value={quantity}
-        onChange={(e) => setQuantity(parseInt(e.target.value))}
-        required
-      />
+  label="Quantity"
+  type="number"
+  required
+  placeholder="0"
+  value={quantity}
+  onChange={(e) => {
+    const val = e.target.value;
+
+    // If user presses backspace (clears), make it blank
+    if (val === '') {
+      setQuantity('');
+    } else {
+      setQuantity(val); // Keep as string while typing
+    }
+  }}
+/>
+
+
+
+
       <Button type="submit" variant="contained" color="primary">
         Add
       </Button>
