@@ -60,9 +60,12 @@ function App() {
       })
       .catch((err) => console.error('Failed to delete item:', err));
   };
-  const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredItems = searchTerm
+  ? items.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  : [];
+
   
   return (
       <Container maxWidth="md" sx={{ paddingY: 4 }}>
